@@ -1,0 +1,11 @@
+{
+  "name": "hbars",
+  "version": "0.0.10",
+  "description": "A Haml implementation for Handlebars/HTMLBars",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/code0100fun/hbars.git"
+  },
+  "author": "Chase McCarthy",
+  "license": "ISC"
+}
