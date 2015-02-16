@@ -71,6 +71,7 @@ var buildElement = function(node, indent) {
   var lines = [];
   var attributes = buildAttributes(node);
   var bindAttrs = buildAttributeBindings(node);
+  var attributeHelpers = buildAttributeHelpers(node);
   var content;
   if(node.content){
     content = buildInlineContent(node.content);
@@ -78,7 +79,7 @@ var buildElement = function(node, indent) {
     content = buildContent(node, indent);
   }
   var indentStr = repeat('  ', indent);
-  var tag = [indentStr, '<', node.tag, attributes, bindAttrs, '>', content,
+  var tag = [indentStr, '<', node.tag, attributes, bindAttrs, attributeHelpers, '>', content,
               '</',node.tag,'>'].join('');
   lines.push(tag);
   return lines;
@@ -110,6 +111,16 @@ var buildAttributeBindings = function(node) {
     return [' ', '{{', 'bind-attr'].concat(attrs).concat(['}}']).join('');
   }
   return '';
+};
+
+var buildAttributeHelpers = function(node) {
+  var helpers = [];
+  if(node.helpers){
+    node.helpers.forEach(function(helper){
+      helpers.push(build(helper));
+    });
+  }
+  return helpers.join('');
 };
 
 var  buildAttributes = function(node) {
