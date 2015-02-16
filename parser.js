@@ -90,7 +90,9 @@ module.exports = (function() {
             var addAtributes = condense(attrs);
             addProperties(element, 'attributes', condense(attributes.concat(addAtributes.attributes)));
             addProperties(element, 'attributeBindings', condense(addAtributes.attributeBindings));
-            addProperty(element, 'helpers', addAtributes.helpers);
+            if(typeof(addAtributes.helpers) !== 'undefined'){
+              addProperty(element, 'helpers', array(addAtributes.helpers));
+            }
             addProperty(element, 'content', i);
             return element;
           },
@@ -1781,7 +1783,7 @@ module.exports = (function() {
           TERM_CHAR = options.TERM_CHAR || '\uEFFF';
 
       function array(input){
-        if(typeof(input) !== 'array'){
+        if(Object.prototype.toString.call(input) !== '[object Array]'){
           input = [input];
         }
         return input;
