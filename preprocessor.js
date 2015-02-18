@@ -64,7 +64,7 @@ module.exports = (function() {
               }
               return out;
             },
-        peg$c9 = function(line, e, children) {
+        peg$c9 = function(line, children) {
               var out = line.join('');
               if(children){
                 out = out + children;
@@ -378,9 +378,11 @@ module.exports = (function() {
             s2 = peg$c0;
           }
           if (s2 !== peg$FAILED) {
-            s3 = peg$parseEOL();
-            if (s3 === peg$FAILED) {
-              s3 = peg$c1;
+            s3 = [];
+            s4 = peg$parseEOL();
+            while (s4 !== peg$FAILED) {
+              s3.push(s4);
+              s4 = peg$parseEOL();
             }
             if (s3 !== peg$FAILED) {
               s4 = peg$currPos;
@@ -415,7 +417,7 @@ module.exports = (function() {
               }
               if (s4 !== peg$FAILED) {
                 peg$reportedPos = s0;
-                s1 = peg$c9(s2, s3, s4);
+                s1 = peg$c9(s2, s4);
                 s0 = s1;
               } else {
                 peg$currPos = s0;
