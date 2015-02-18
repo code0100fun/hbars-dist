@@ -274,8 +274,8 @@ module.exports = (function() {
 
         peg$c0 = [],
         peg$c1 = peg$FAILED,
-        peg$c2 = /^[a-zA-Z"']/,
-        peg$c3 = { type: "class", value: "[a-zA-Z\"']", description: "[a-zA-Z\"']" },
+        peg$c2 = /^[^}]/,
+        peg$c3 = { type: "class", value: "[^}]", description: "[^}]" },
         peg$c4 = function(c) { return c.join(''); },
         peg$c5 = function(b) {
             var top = b[0];
@@ -316,8 +316,8 @@ module.exports = (function() {
         peg$c13 = "=",
         peg$c14 = { type: "literal", value: "=", description: "\"=\"" },
         peg$c15 = function(a) { return { attributes: a }; },
-        peg$c16 = function(h) { return { helpers: h }; },
-        peg$c17 = function(b) { return { attributeBindings: b }; },
+        peg$c16 = function(b) { return { attributeBindings: b }; },
+        peg$c17 = function(h) { return { helpers: h }; },
         peg$c18 = function(t, idClass, attrs, i) {
             return !!t || !!idClass.length;
           },
@@ -897,7 +897,7 @@ module.exports = (function() {
             s5 = s6;
             if (s5 === peg$FAILED) {
               s5 = peg$currPos;
-              s6 = peg$parseattributeHelper();
+              s6 = peg$parseattributeBindings();
               if (s6 !== peg$FAILED) {
                 peg$reportedPos = s5;
                 s6 = peg$c16(s6);
@@ -905,7 +905,7 @@ module.exports = (function() {
               s5 = s6;
               if (s5 === peg$FAILED) {
                 s5 = peg$currPos;
-                s6 = peg$parseattributeBindings();
+                s6 = peg$parseattributeHelper();
                 if (s6 !== peg$FAILED) {
                   peg$reportedPos = s5;
                   s6 = peg$c17(s6);
@@ -924,7 +924,7 @@ module.exports = (function() {
               s5 = s6;
               if (s5 === peg$FAILED) {
                 s5 = peg$currPos;
-                s6 = peg$parseattributeHelper();
+                s6 = peg$parseattributeBindings();
                 if (s6 !== peg$FAILED) {
                   peg$reportedPos = s5;
                   s6 = peg$c16(s6);
@@ -932,7 +932,7 @@ module.exports = (function() {
                 s5 = s6;
                 if (s5 === peg$FAILED) {
                   s5 = peg$currPos;
-                  s6 = peg$parseattributeBindings();
+                  s6 = peg$parseattributeHelper();
                   if (s6 !== peg$FAILED) {
                     peg$reportedPos = s5;
                     s6 = peg$c17(s6);
@@ -1609,6 +1609,9 @@ module.exports = (function() {
       }
       if (s1 !== peg$FAILED) {
         s2 = peg$parsemustacheContent();
+        if (s2 === peg$FAILED) {
+          s2 = peg$c8;
+        }
         if (s2 !== peg$FAILED) {
           if (input.charCodeAt(peg$currPos) === 125) {
             s3 = peg$c27;

@@ -1,11 +1,34 @@
 {
   "name": "hbars",
-  "version": "0.0.12",
+  "version": "0.0.14",
   "description": "A Haml implementation for Handlebars/HTMLBars",
   "repository": {
     "type": "git",
     "url": "https://github.com/code0100fun/hbars.git"
   },
+  "scripts": {
+    "build": "rm -rf dist/ tmp/ && $(which broccoli) build dist",
+    "test": "./node_modules/.bin/testem",
+    "postinstall": "bower install && npm run build"
+  },
   "author": "Chase McCarthy",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "ast-util": "^0.5.2",
+    "broccoli": "^0.13.3",
+    "broccoli-compile-modules": "^1.1.0",
+    "broccoli-concat": "0.0.12",
+    "broccoli-es6-module-transpiler": "^0.5.0",
+    "broccoli-file-remover": "^0.3.1",
+    "broccoli-jshint": "^0.5.3",
+    "broccoli-merge-trees": "^0.2.1",
+    "broccoli-pegjs": "0.0.1",
+    "broccoli-static-compiler": "^0.2.1",
+    "broccoli-wrap": "0.0.2",
+    "chai": "^1.10.0",
+    "es6-module-transpiler-amd-formatter": "^0.2.4",
+    "mocha": "^2.0.1",
+    "pegjs": "^0.8.0",
+    "recast": "^0.9.8"
+  }
 }
