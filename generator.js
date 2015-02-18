@@ -24,11 +24,10 @@ var buildInlineContent = function(contents) {
 var buildContent = function(node, indent) {
   var content = [];
   if(node.nodes){
-    content.push('\n');
     node.nodes.forEach(function(n){
       content.push(build(n, indent + 1));
     });
-    content.push('\n');
+    content = [content.join('\n')];
   }
   return content.join('');
 };
@@ -44,7 +43,8 @@ var buildExpression = function(node, indent) {
 var buildText = function(node, indent) {
   var lines = [];
   var indentStr = repeat('  ', indent);
-  var text = indentStr + node.content;
+  var content = buildInlineContent(node.content);
+  var text = indentStr + content;
   lines.push(text);
   return lines;
 };
@@ -53,8 +53,8 @@ var buildBlockExpression = function(node, indent) {
   var lines = [];
   var content = buildContent(node, indent);
   var indentStr = repeat('  ', indent);
-  var expression = [indentStr, '{{#', node.name, ' ', node.content, '}}', content,
-              indentStr, '{{/',node.name,'}}'].join('');
+  var expression = [indentStr, '{{#', node.name, ' ', node.content, '}}', '\n',
+              content, '\n', indentStr, '{{/',node.name,'}}'].join('');
   lines.push(expression);
   return lines;
 };
@@ -62,7 +62,7 @@ var buildBlockExpression = function(node, indent) {
 var buildMidBlockExpression = function(node, indent) {
   var lines = [];
   var indentStr = repeat('  ', indent - 1);
-  var expression = ['\n', indentStr, '{{', node.name, '}}', '\n'].join('');
+  var expression = [indentStr, '{{', node.name, '}}'].join('');
   lines.push(expression);
   return lines;
 };
@@ -77,6 +77,9 @@ var buildElement = function(node, indent) {
     content = buildInlineContent(node.content);
   }else{
     content = buildContent(node, indent);
+    if(content && content.length > 0){
+      content = ['\n', buildContent(node, indent), '\n'].join('');
+    }
   }
   var indentStr = repeat('  ', indent);
   var tag = [indentStr, '<', node.tag, attributes, bindAttrs, attributeHelpers, '>', content,
@@ -85,18 +88,38 @@ var buildElement = function(node, indent) {
   return lines;
 };
 
+var enclosedIn = function(str, char){
+  return str.substr(str.length - 1) === char;
+};
+
+var unquote = function(str){
+  if(enclosedIn(str, '"')) {
+    str = str.substring(1, str.length-1);
+  }
+  if(enclosedIn(str, "'")) {
+    str = str.substring(1, str.length-1);
+  }
+  return str;
+};
+
+var enquote = function(str, char){
+  var quotes = char || '"';
+  if(char){
+    quotes = char;
+  }
+  return [quotes, unquote(str), quotes].join('');
+};
+
 var buildAttribute = function(key, value, quoted){
-  var quotes = '"';
-  if(typeof(quoted) === 'undefined'){
-    quoted = true;
-  }
-  if(!quoted){
-    quotes = '';
-  }
   if(isArray(value)){
     value = value.join(' ');
   }
-  return [' ', key, '=', quotes, value, quotes].join('');
+  quoted = quoted || typeof(quoted) === 'undefined';
+  if(quoted){
+    value = enquote(value);
+  }
+  var attr =  [' ', key, '=', value].join('');
+  return attr;
 };
 
 var buildAttributeBindings = function(node) {
@@ -126,7 +149,7 @@ var buildAttributeHelpers = function(node) {
   return '';
 };
 
-var  buildAttributes = function(node) {
+var buildAttributes = function(node) {
   var attrs = [];
   if(node.id){
     attrs.push(buildAttribute('id', node.id));
