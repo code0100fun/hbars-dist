@@ -49,6 +49,10 @@ var buildText = function(node, indent) {
   return lines;
 };
 
+var buildString = function(node) {
+  return '"' + buildText(node, 0) + '"';
+};
+
 var buildBlockExpression = function(node, indent) {
   var lines = [];
   var content = buildContent(node, indent);
@@ -67,6 +71,13 @@ var buildMidBlockExpression = function(node, indent) {
   return lines;
 };
 
+var SELF_CLOSING_TAGS = ['area', 'base', 'br', 'col', 'command', 'embed', 'hr',
+  'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
+
+var selfClosing = function(tag) {
+  return SELF_CLOSING_TAGS.indexOf(tag) !== -1;
+};
+
 var buildElement = function(node, indent) {
   var lines = [];
   var attributes = buildAttributes(node);
@@ -82,9 +93,13 @@ var buildElement = function(node, indent) {
     }
   }
   var indentStr = repeat('  ', indent);
-  var tag = [indentStr, '<', node.tag, attributes, bindAttrs, attributeHelpers, '>', content,
-              '</',node.tag,'>'].join('');
-  lines.push(tag);
+  var tag = [indentStr, '<', node.tag, attributes, bindAttrs, attributeHelpers];
+  if(selfClosing(node.tag)){
+    tag = tag.concat(['>']);
+  }else{
+    tag = tag.concat(['>', content, '</',node.tag,'>']);
+  }
+  lines.push(tag.join(''));
   return lines;
 };
 
@@ -115,6 +130,9 @@ var buildAttribute = function(key, value, quoted){
     value = value.join(' ');
   }
   quoted = quoted || typeof(quoted) === 'undefined';
+  if(typeof(value) === 'object'){
+    value = build(value);
+  }
   if(quoted){
     value = enquote(value);
   }
@@ -130,10 +148,7 @@ var buildAttributeBindings = function(node) {
       attrs.push(buildAttribute(key, value, false));
     });
   }
-  if(attrs.length > 0){
-    return [' ', '{{', 'bind-attr'].concat(attrs).concat(['}}']).join('');
-  }
-  return '';
+  return attrs.join('');
 };
 
 var buildAttributeHelpers = function(node) {
@@ -185,6 +200,9 @@ var build = function(node, indent){
       break;
     case 'text':
       lines = buildText(node, indent);
+      break;
+    case 'string':
+      lines = buildString(node, indent);
       break;
   }
   return lines;
