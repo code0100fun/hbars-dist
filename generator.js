@@ -66,7 +66,8 @@ var buildBlockExpression = function(node, indent) {
 var buildMidBlockExpression = function(node, indent) {
   var lines = [];
   var indentStr = repeat('  ', indent - 1);
-  var expression = [indentStr, '{{', node.name, '}}'].join('');
+  var content = node.content ? ' ' + node.content : '';
+  var expression = [indentStr, '{{', node.name,  content, '}}'].join('');
   lines.push(expression);
   return lines;
 };
@@ -84,15 +85,15 @@ var buildElement = function(node, indent) {
   var bindAttrs = buildAttributeBindings(node);
   var attributeHelpers = buildAttributeHelpers(node);
   var content;
+  var indentStr = repeat('  ', indent);
   if(node.content){
     content = buildInlineContent(node.content);
   }else{
     content = buildContent(node, indent);
     if(content && content.length > 0){
-      content = ['\n', buildContent(node, indent), '\n'].join('');
+      content = ['\n', buildContent(node, indent), '\n', indentStr].join('');
     }
   }
-  var indentStr = repeat('  ', indent);
   var tag = [indentStr, '<', node.tag, attributes, bindAttrs, attributeHelpers];
   if(selfClosing(node.tag)){
     tag = tag.concat(['>']);
