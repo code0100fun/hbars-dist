@@ -1,6 +1,6 @@
 {
   "name": "hbars",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Haml-like syntax transpiler for HTMLBars templates",
   "repository": {
     "type": "git",

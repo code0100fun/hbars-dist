@@ -7,6 +7,9 @@
 })(function (exports) {
   "use strict";
 
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
   var isArray = function isArray(thing) {
     if (Object.prototype.toString.call(thing) === "[object Array]") {
       return true;
@@ -224,7 +227,4 @@
   };
 
   exports.generate = generate;
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
 });

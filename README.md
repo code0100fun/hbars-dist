@@ -1,21 +1,4 @@
 # hbars
 
-HAML => HTMLBars
+This a shim repo. The main repo is [here](https://github.com/code0100fun/hbars).
 
-## Dependencies
-
-`bower install`
-
-`npm install`
-
-## Build
-
-`npm run build`
-
-## Test
-
-`./bin/test`
-
-or
-
-`./bin/test 'compiler'`
